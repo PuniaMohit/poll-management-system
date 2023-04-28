@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: orange;
+    padding: 20px;
+  }
+  
+
+  .logo h1 {
+    color: white;
+  }
+  
+  
+  .nav {
+    display: flex;
+  }
+  
+  
+  .signin,
+  .signup {
+    padding: 10px;
+    background-color: white;
+    margin-left: 10px;
+  }
+  
+ 
+  .signin div,
+  .signup div {
+    font-weight: bold;
+    text-align: center;
+  }
+  
+
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+ 
+  .logo h1 {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  
+ 
+  main {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .navbar-link a.active {
+    color: black
+}
+
+.navbar-link a {
+    text-decoration: none;
+}
