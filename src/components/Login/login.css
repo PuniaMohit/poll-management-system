@@ -3,11 +3,14 @@
   padding: 0;
 }
 
+.container-fluid {
+  background-color: #f6f9ff;
+  width: 100vw;
+height: 80vh;
+}
 .login-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border: 2px solid black;
   padding: 20px;
   width: 30%;
   margin: 0 auto;
@@ -40,9 +43,14 @@ button[type="submit"] {
   padding: 10px 20px;
   font-size: 1.1rem;
   cursor: pointer;
-  width: 54%;
+  width: 100%;
 }
 
 button[type="submit"]:hover {
   background-color: darkorange;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.8rem;
 }

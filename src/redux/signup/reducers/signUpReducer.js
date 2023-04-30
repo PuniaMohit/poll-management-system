@@ -4,19 +4,20 @@ import {
   USER_REGISTER_FAILURE,
 } from "../../constants";
 
-// this is for further reference
-// const initialState = {
-//    userRegsiter:{},
-//   };
+const initialState = {
+  userRegister: '',
+  loading: false,
+  error: null,
+};
 
-const signUpReducer = (state = {}, action) => {
+const signUpReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_REGISTER_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case USER_REGISTER_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return { ...state, loading: false, userRegister: action.payload };
     case USER_REGISTER_FAILURE:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

@@ -1,7 +1,11 @@
-import "./login.css";
 import { useState } from "react";
+import "bootstrap/dist/css/bootstrap.css";
+import { useDispatch, useSelector } from "react-redux";
+import "./login.css";
+import { login } from "../../redux/login/actions/login";
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -9,7 +13,6 @@ const LoginPage = () => {
     event.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-
     const passwordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
     const passwordValid = passwordRegex.test(password);
@@ -38,38 +41,42 @@ const LoginPage = () => {
         setPasswordError(errors[0]);
       }
     } else {
-      // this console is for further reference
-      console.log("Form submitted");
+      let userLogin = {};
+      userLogin.email = email;
+      userLogin.password = password;
+      dispatch(login(userLogin));
     }
   };
 
   return (
-    <form className="login-form">
-      <h2>Login Form</h2>
-      <div className="form-group">
-        <label htmlFor="email">Email Address</label>
-        <input
-          type="email"
-          id="email"
-          placeholder="Enter your email address"
-          required
-        />
-        <div className="error-message">{emailError}</div>
-      </div>
-      <div className="form-group">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          placeholder="Enter your password"
-          required
-        />
-      </div>
-      <div className="error-message">{passwordError}</div>
-      <button type="submit" onClick={validateForm}>
-        Submit
-      </button>
-    </form>
+    <div className="container-fluid pt-5">
+      <form className="signup-form card p-3 shadow bg-white">
+        <h2 mx-auto>Login Form</h2>
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email address"
+            required
+          />
+          <div className="error-message">{emailError}</div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <div className="error-message">{passwordError}</div>
+        <button type="submit" onClick={validateForm}>
+          Submit
+        </button>
+      </form>
+    </div>
   );
 };
 

@@ -14,11 +14,9 @@ export const register = (userData) => async (dispatch) => {
     );
     dispatch({
       type: USER_REGISTER_SUCCESS,
-      payload: data,
+      payload: data.message,
     });
   } catch (error) {
-    console.log(error.response.data)
-    //this console is just to show that thunk is applied.
     dispatch({
       type: USER_REGISTER_FAILURE,
       payload: error.response.data,

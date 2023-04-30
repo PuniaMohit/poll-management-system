@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "./signUp.css";
 import { register } from "../../redux/signup/actions/signUp";
 import "bootstrap/dist/css/bootstrap.css";
 
+
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const successOrErrorMessage = useSelector(
-    (state) => state.signUpReducer.state
-  );
+  const successOrErrorMessage = useSelector((state) => state.signUp);
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -87,7 +88,13 @@ const SignUpPage = () => {
       dispatch(register(userRegister));
     }
   };
-
+useEffect(()=>{
+if(successOrErrorMessage.userRegister){
+  navigate('/login')
+}else if(successOrErrorMessage.error){
+  setEmailError('Repeated Email') 
+}
+},[successOrErrorMessage])
   return (
     <div className="container-fluid pt-5">
       <form className="signup-form card p-3 shadow bg-white">
