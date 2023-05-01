@@ -1,7 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./header.css";
 
 const Header = () => {
+  const navigate = useNavigate();
   return (
     <header>
       <div className="logo">
@@ -9,24 +10,25 @@ const Header = () => {
       </div>
       <div className="nav">
         <div className="signin">
-          <NavLink
-            to="/login"
+          <div
+            onClick={() => navigate("/")}
             className={({ isActive, isPending }) =>
               isPending ? "pending" : isActive ? "active" : ""
             }
           >
             Sign In
-          </NavLink>
+          </div>
         </div>
         <div className="signup">
-          <NavLink
-            to="/signup"
+          <div
+            onClick={() =>{
+              navigate("./signup")}}
             className={({ isActive, isPending }) =>
               isPending ? "pending" : isActive ? "active" : ""
             }
           >
             Sign Up
-          </NavLink>
+          </div>
         </div>
       </div>
     </header>

@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LoginPage from "./components/Login/login";
 import Header from "./components/Header/header";
-import Home from "./components/Home/home";
 import SignUpPage from "./components/Signup/signUp";
+import AdminPollList from "./components/adminPollList/adminPollList";
 
 function App() {
   return (
     <div>
       <Header />
       <Routes>
-        {/* I left home here because logic of showing loginpage if not login or redirected to pollList page */}
-        <Route exact path="/" element={<Home />} />  
-        <Route exact path="/login" element={<LoginPage />} />
+        <Route exact path="/" element={<LoginPage />} />
+        <Route exact path="/adminPollList" element={<AdminPollList />} />
         <Route exact path="/signup" element={<SignUpPage />} />
+        
       </Routes>
     </div>
   );

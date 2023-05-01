@@ -9,11 +9,11 @@ const initialState = {
 const signUpReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, userLogin:'', error:null };
     case LOGIN_SUCCESS:
-      return { ...state, loading: false, userLogin: action.payload };
+      return { ...state, loading: false, userLogin: action.payload, error:null };
     case LOGIN_FAILURE:
-      return { ...state, loading: false, error: action.payload };
+      return { ...state, loading: false, userLogin:'', error: action.payload };
     default:
       return state;
   }

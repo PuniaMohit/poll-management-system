@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./signUp.css";
 import { register } from "../../redux/signup/actions/signUp";
-import "bootstrap/dist/css/bootstrap.css";
 
 
 const SignUpPage = () => {
@@ -89,6 +88,9 @@ const SignUpPage = () => {
     }
   };
 useEffect(()=>{
+    if(JSON.parse(sessionStorage.getItem("user"))) {
+      navigate("/adminPollList");
+    }
 if(successOrErrorMessage.userRegister){
   navigate('/login')
 }else if(successOrErrorMessage.error){

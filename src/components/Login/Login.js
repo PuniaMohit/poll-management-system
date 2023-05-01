@@ -1,11 +1,13 @@
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 import { login } from "../../redux/login/actions/login";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const successOrErrorMessage = useSelector((state) => state.login);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -47,6 +49,25 @@ const LoginPage = () => {
       dispatch(login(userLogin));
     }
   };
+
+  useEffect(() => {
+    if(JSON.parse(sessionStorage.getItem("user"))) {
+      navigate("/adminPollList");
+    }else{
+      if (successOrErrorMessage.userLogin) {
+        sessionStorage.setItem("user",JSON.stringify(successOrErrorMessage.userLogin));
+        navigate("/adminPollList");
+      } else if (successOrErrorMessage.error) {
+        if (successOrErrorMessage.error.message === "password is incorrect") {
+          setPasswordError("password is incorrect");
+        } else if (
+          successOrErrorMessage.error.message === "user data not found"
+        )
+          setEmailError("user data not found");
+      }
+    }
+    
+  }, [successOrErrorMessage]);
 
   return (
     <div className="container-fluid pt-5">
