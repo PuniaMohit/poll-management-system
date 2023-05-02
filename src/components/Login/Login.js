@@ -109,7 +109,7 @@ const LoginPage = () => {
             onClick={() => navigate("./signup")}
           >
             Signup
-          </span>{" "}
+          </span>
         </div>
       </form>
     </div>

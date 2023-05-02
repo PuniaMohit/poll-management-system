@@ -10,93 +10,82 @@ const SignUpPage = () => {
   const dispatch = useDispatch();
   const role = useSelector((state) => state.roleList.roleList);
   const successOrErrorMessage = useSelector((state) => state.signUp);
-  const [firstNameError, setFirstNameError] = useState("");
-  const [lastNameError, setLastNameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [roleError, setRoleError] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    password: "",
+    email: "",
+    roleId: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    firstNameError: "",
+    lastNameError: "",
+    passwordError: "",
+    emailError: "",
+    roleError: "",
+  });
   const nameRegex = /^.{4,}$/;
   const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateForm = (event) => {
     event.preventDefault();
-    const firstName = document.getElementById("first-name").value;
-    const lastName = document.getElementById("last-name").value;
-    const password = document.getElementById("password").value;
-    const email = document.getElementById("email").value;
-    let role = document.getElementById("role").value;
-    if (role === "Admin") {
-      role = "1";
-    } else if (role === "user") {
-      role = "2";
-    } else if (role === "Hr") {
-      role = "3";
-    } else {
-      role = "";
-    }
-    const firstNameValid = nameRegex.test(firstName);
-    const lastNameValid = nameRegex.test(lastName);
-    const passwordValid = passwordRegex.test(password);
-    const emailValid = emailRegex.test(email);
-    const roleValid = role !== "";
-    setFirstNameError("");
-    setLastNameError("");
-    setPasswordError("");
-    setEmailError("");
-    setRoleError("");
+    const { firstName, lastName, password, email, roleId } = formData;
+    const errors = {
+      firstName: nameRegex.test(firstName)
+        ? ""
+        : "First name must be at least 4 characters",
+      lastName: nameRegex.test(lastName)
+        ? ""
+        : "Last name must be at least 4 characters",
+      password: passwordRegex.test(password)
+        ? ""
+        : "min. 8 characters, one uppercase letter, lowercase letter, number",
+      email: emailRegex.test(email) ? "" : "Invalid email",
+      role: roleId !== "" ? "" : "Role must be selected",
+    };
+    setFormErrors({
+      firstNameError: errors.firstName,
+      lastNameError: errors.lastName,
+      passwordError: errors.password,
+      emailError: errors.email,
+      roleError: errors.role,
+    });
     if (
-      firstNameValid &&
-      lastNameValid &&
-      passwordValid &&
-      emailValid &&
-      roleValid
+      nameRegex.test(firstName) &&
+      nameRegex.test(lastName) &&
+      passwordRegex.test(password) &&
+      emailRegex.test(email) &&
+      roleId
     ) {
-      let userRegister = {};
-      userRegister.firstName = firstName;
-      userRegister.lastName = lastName;
-      userRegister.password = password;
-      userRegister.email = email;
-      userRegister.roleId = role;
-      dispatch(register(userRegister));
-    } else {
-      if (!firstNameValid) {
-        setFirstNameError("First name must be at least 4 characters");
-      }
-      if (!lastNameValid) {
-        setLastNameError("Last name must be at least 4 characters");
-      }
-      if (!passwordValid) {
-        setPasswordError(
-          "min. 8 characters, one uppercase letter, lowercase letter, number"
-        );
-      }
-      if (!emailValid) {
-        setEmailError("Invalid email");
-      }
-      if (!roleValid) {
-        setRoleError("Role must be selected");
-      }
+      dispatch(register(formData));
     }
+  };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
   };
   const handleBlur = (event) => {
     const { name, value } = event.target;
+    let newFormErrors = { ...formErrors };
     if (name === "firstName") {
-      setFirstNameError(
-        !nameRegex.test(value) ? "First name must be at least 4 characters" : ""
-      );
+      newFormErrors.firstNameError = !nameRegex.test(value)
+        ? "First name must be at least 4 characters"
+        : "";
     } else if (name === "lastName") {
-      setLastNameError(
-        !nameRegex.test(value) ? "Last name must be at least 4 characters" : ""
-      );
+      newFormErrors.lastNameError = !nameRegex.test(value)
+        ? "Last name must be at least 4 characters"
+        : "";
     } else if (name === "password") {
-      setPasswordError(!passwordRegex.test(value) ? "Invalid password" : "");
+      newFormErrors.passwordError = !passwordRegex.test(value)
+        ? "Invalid password"
+        : "";
     } else if (name === "email") {
-      setEmailError(!emailRegex.test(value) ? "Invalid email" : "");
+      newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";
     } else {
-      value === "select Role"
-        ? setRoleError("Role must be selected")
-        : setRoleError("");
+      newFormErrors.roleError =
+        value === "select Role" ? "Role must be selected" : "";
     }
+    setFormErrors(newFormErrors);
   };
 
   useEffect(() => {
@@ -106,7 +95,7 @@ const SignUpPage = () => {
     if (successOrErrorMessage.userRegister) {
       navigate("/", { replace: true });
     } else if (successOrErrorMessage.error) {
-      setEmailError("Repeated Email");
+      formErrors.emailError("Repeated Email");
     }
     dispatch(roleList());
   }, [successOrErrorMessage]);
@@ -122,10 +111,11 @@ const SignUpPage = () => {
             name="firstName"
             className="form-control"
             placeholder="Enter your first name"
+            onChange={handleChange}
             onBlur={handleBlur}
             required
           />
-          <div className="error-message">{firstNameError}</div>
+          <div className="error-message">{formErrors.firstNameError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="last-name">Last Name</label>
@@ -134,11 +124,12 @@ const SignUpPage = () => {
             id="last-name"
             name="lastName"
             className="form-control"
+            onChange={handleChange}
             placeholder="Enter your last name"
             onBlur={handleBlur}
             required
           />
-          <div className="error-message">{lastNameError}</div>
+          <div className="error-message">{formErrors.lastNameError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
@@ -147,12 +138,13 @@ const SignUpPage = () => {
             id="password"
             name="password"
             className="form-control"
+            onChange={handleChange}
             placeholder="Enter your password"
             onBlur={handleBlur}
             required
           />
         </div>
-        <div className="error-message">{passwordError}</div>
+        <div className="error-message">{formErrors.passwordError}</div>
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
@@ -160,11 +152,12 @@ const SignUpPage = () => {
             id="email"
             name="email"
             className="form-control"
+            onChange={handleChange}
             placeholder="Enter your email address"
             onBlur={handleBlur}
             required
           />
-          <div className="error-message">{emailError}</div>
+          <div className="error-message">{formErrors.emailError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="role">Role</label>
@@ -172,19 +165,20 @@ const SignUpPage = () => {
             id="role"
             className="form-control"
             onBlur={handleBlur}
-            name="role"
+            onChange={handleChange}
+            name="roleId"
             required
           >
-            <option value="select Role">Select Role</option>
-            {role.map((element) => {
+            <option value="0">Select Role</option>
+            {role.map((element, index) => {
               return (
-                <option key={element.name} value={element.name}>
+                <option key={element.name} value={element.id.toString()}>
                   {element.name}
                 </option>
               );
             })}
           </select>
-          <div className="error-message">{roleError}</div>
+          <div className="error-message">{formErrors.roleError}</div>
         </div>
         <button
           type="submit"
