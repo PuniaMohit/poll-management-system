@@ -10,52 +10,51 @@ const LoginPage = () => {
   const successOrErrorMessage = useSelector((state) => state.login);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  const passwordRegex =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validateForm = (event) => {
     event.preventDefault();
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    const passwordRegex =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
     const passwordValid = passwordRegex.test(password);
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const emailValid = emailRegex.test(email);
-
     setEmailError("");
     setPasswordError("");
-
-    let errors = [];
-
-    if (!emailValid) {
-      errors.push("Invalid email");
-    }
-    if (!passwordValid) {
-      errors.push(
-        "min. 8 characters, one uppercase letter, lowercase letter, number"
-      );
-    }
-
-    if (errors.length > 0) {
-      if (!emailValid) {
-        setEmailError(errors[0]);
-      } else if (!passwordValid) {
-        setPasswordError(errors[0]);
-      }
-    } else {
+    if (emailValid && passwordValid) {
       let userLogin = {};
       userLogin.email = email;
       userLogin.password = password;
       dispatch(login(userLogin));
+    } else {
+      if (!emailValid) {
+        setEmailError("Invalid email");
+      }
+      if (!passwordValid) {
+        setPasswordError(
+          "min. 8 characters, one uppercase letter, lowercase letter, number"
+        );
+      }
+    }
+  };
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    if (name === "email") {
+      setEmailError(!emailRegex.test(value) ? "Invalid email" : "");
+    } else if (name === "password") {
+      setPasswordError(!passwordRegex.test(value) ? "Invalid password" : "");
     }
   };
 
   useEffect(() => {
-    if(JSON.parse(sessionStorage.getItem("user"))) {
+    if (JSON.parse(sessionStorage.getItem("user"))) {
       navigate("/adminPollList");
-    }else{
+    } else {
       if (successOrErrorMessage.userLogin) {
-        sessionStorage.setItem("user",JSON.stringify(successOrErrorMessage.userLogin));
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify(successOrErrorMessage.userLogin)
+        );
         navigate("/adminPollList");
       } else if (successOrErrorMessage.error) {
         if (successOrErrorMessage.error.message === "password is incorrect") {
@@ -66,18 +65,19 @@ const LoginPage = () => {
           setEmailError("user data not found");
       }
     }
-    
   }, [successOrErrorMessage]);
 
   return (
     <div className="container-fluid pt-5">
       <form className="signup-form card p-3 shadow bg-white">
-        <h2 mx-auto>Login Form</h2>
+        <h2 className="mx-auto">Login</h2>
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
             type="email"
             id="email"
+            name="email"
+            onBlur={handleBlur}
             placeholder="Enter your email address"
             required
           />
@@ -88,14 +88,29 @@ const LoginPage = () => {
           <input
             type="password"
             id="password"
+            name="password"
+            onBlur={handleBlur}
             placeholder="Enter your password"
             required
           />
         </div>
         <div className="error-message">{passwordError}</div>
-        <button type="submit" onClick={validateForm}>
-          Submit
+        <button
+          type="submit"
+          onClick={validateForm}
+          disabled={successOrErrorMessage.loading ? true : false}
+        >
+          {successOrErrorMessage.loading ? "Loading..." : "Submit"}
         </button>
+        <div className="mx-auto mt-2">
+          No Account?{" "}
+          <span
+            className="navigate-signup"
+            onClick={() => navigate("./signup")}
+          >
+            Signup
+          </span>{" "}
+        </div>
       </form>
     </div>
   );

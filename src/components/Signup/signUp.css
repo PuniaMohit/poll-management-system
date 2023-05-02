@@ -6,6 +6,7 @@
 .container-fluid {
   background-color: #f6f9ff;
   width: 100vw;
+  height: 100vh;
 }
 
 .signup-form h2 {
@@ -83,4 +84,10 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: darkorange;
+}
+
+.navigate-signup{
+  margin-left: 5px;
+  color:#007bff ;
+  cursor: pointer;
 }

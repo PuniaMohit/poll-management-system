@@ -6,7 +6,7 @@
 .container-fluid {
   background-color: #f6f9ff;
   width: 100vw;
-height: 80vh;
+height: 100vh;
 }
 .login-form {
   display: flex;
@@ -53,4 +53,10 @@ button[type="submit"]:hover {
 .error-message {
   color: red;
   font-size: 0.8rem;
+}
+
+.navigate-signup{
+  margin-left: 5px;
+  color:#007bff ;
+  cursor: pointer;
 }
