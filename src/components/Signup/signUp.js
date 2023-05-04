@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Form, Button, Container } from "react-bootstrap";
 import "./signUp.css";
-import { register } from "../../redux/signup/actions/signUp";
 import roleList from "../../redux/rolelist/actions/roleList";
+import { signUpValidateForm } from "../../utils/formValidate";
+import { signUpHandleBlur } from "../../utils/formValidate";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -24,88 +26,38 @@ const SignUpPage = () => {
     emailError: "",
     roleError: "",
   });
-  const nameRegex = /^.{4,}$/;
-  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validateForm = (event) => {
-    event.preventDefault();
-    const { firstName, lastName, password, email, roleId } = formData;
-    const errors = {
-      firstName: nameRegex.test(firstName)
-        ? ""
-        : "First name must be at least 4 characters",
-      lastName: nameRegex.test(lastName)
-        ? ""
-        : "Last name must be at least 4 characters",
-      password: passwordRegex.test(password)
-        ? ""
-        : "min. 8 characters, one uppercase letter, lowercase letter, number",
-      email: emailRegex.test(email) ? "" : "Invalid email",
-      role: roleId !== "" ? "" : "Role must be selected",
-    };
-    setFormErrors({
-      firstNameError: errors.firstName,
-      lastNameError: errors.lastName,
-      passwordError: errors.password,
-      emailError: errors.email,
-      roleError: errors.role,
-    });
-    if (
-      nameRegex.test(firstName) &&
-      nameRegex.test(lastName) &&
-      passwordRegex.test(password) &&
-      emailRegex.test(email) &&
-      roleId
-    ) {
-      dispatch(register(formData));
-    }
+  const submit = () => {
+    signUpValidateForm(formData, setFormErrors, dispatch);
   };
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
   const handleBlur = (event) => {
-    const { name, value } = event.target;
-    let newFormErrors = { ...formErrors };
-    if (name === "firstName") {
-      newFormErrors.firstNameError = !nameRegex.test(value)
-        ? "First name must be at least 4 characters"
-        : "";
-    } else if (name === "lastName") {
-      newFormErrors.lastNameError = !nameRegex.test(value)
-        ? "Last name must be at least 4 characters"
-        : "";
-    } else if (name === "password") {
-      newFormErrors.passwordError = !passwordRegex.test(value)
-        ? "Invalid password"
-        : "";
-    } else if (name === "email") {
-      newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";
-    } else {
-      newFormErrors.roleError =
-        value === "select Role" ? "Role must be selected" : "";
-    }
-    setFormErrors(newFormErrors);
+    signUpHandleBlur(event, formErrors, setFormErrors);
   };
 
   useEffect(() => {
-    if (JSON.parse(sessionStorage.getItem("user"))) {
+    if (JSON.parse(localStorage.getItem("user"))) {
       navigate("/adminPollList");
     }
     if (successOrErrorMessage.userRegister) {
       navigate("/", { replace: true });
     } else if (successOrErrorMessage.error) {
-      formErrors.emailError("Repeated Email");
+      setFormErrors((prevState) => ({
+        ...prevState,
+        emailError: "Repeated Email",
+      }));
     }
     dispatch(roleList());
   }, [successOrErrorMessage]);
   return (
-    <div className="container-fluid pt-5">
-      <form className="signup-form card p-3 shadow bg-white">
-        <h2 className="mx-auto">Sign Up</h2>
-        <div className="form-group">
-          <label htmlFor="first-name">First Name</label>
-          <input
+    <Container className="container-fluid">
+      <Form className="signup-form">
+        <h2 className="signup">Sign Up</h2>
+        <Form.Group className="form-group">
+          <Form.Label className="label">First Name</Form.Label>
+          <Form.Control
             type="text"
             id="first-name"
             name="firstName"
@@ -116,10 +68,8 @@ const SignUpPage = () => {
             required
           />
           <div className="error-message">{formErrors.firstNameError}</div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="last-name">Last Name</label>
-          <input
+          <Form.Label className="label">Last Name</Form.Label>
+          <Form.Control
             type="text"
             id="last-name"
             name="lastName"
@@ -130,10 +80,8 @@ const SignUpPage = () => {
             required
           />
           <div className="error-message">{formErrors.lastNameError}</div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
+          <Form.Label className="label">Password</Form.Label>
+          <Form.Control
             type="password"
             id="password"
             name="password"
@@ -143,11 +91,9 @@ const SignUpPage = () => {
             onBlur={handleBlur}
             required
           />
-        </div>
-        <div className="error-message">{formErrors.passwordError}</div>
-        <div className="form-group">
-          <label htmlFor="email">Email Address</label>
-          <input
+          <div className="error-message">{formErrors.passwordError}</div>
+          <Form.Label className="label">Email Address</Form.Label>
+          <Form.Control
             type="email"
             id="email"
             name="email"
@@ -158,16 +104,13 @@ const SignUpPage = () => {
             required
           />
           <div className="error-message">{formErrors.emailError}</div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="role">Role</label>
-          <select
+          <Form.Label className="label">Role</Form.Label>
+          <Form.Select
             id="role"
             className="form-control"
             onBlur={handleBlur}
             onChange={handleChange}
             name="roleId"
-            required
           >
             <option value="0">Select Role</option>
             {role.map((element, index) => {
@@ -177,27 +120,27 @@ const SignUpPage = () => {
                 </option>
               );
             })}
-          </select>
+          </Form.Select>
           <div className="error-message">{formErrors.roleError}</div>
-        </div>
-        <button
-          type="submit"
-          onClick={validateForm}
+        </Form.Group>
+        <Button
+          className="submit"
+          onClick={submit}
           disabled={successOrErrorMessage.loading ? true : false}
         >
           {successOrErrorMessage.loading ? "Loading..." : "Submit"}
-        </button>
-        <div className="mx-auto mt-2">
+        </Button>
+        <div className="signin-message">
           Already have an account?{" "}
           <span
-            className="navigate-signup"
+            className="navigate-signin"
             onClick={() => navigate("/", { replace: true })}
           >
             Login Here!
           </span>
         </div>
-      </form>
-    </div>
+      </Form>
+    </Container>
   );
 };
 

@@ -5,11 +5,15 @@ import {
   LOGIN_FAILURE,
 } from "../../constants";
 
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL
+});
+
 export const login = (userData) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_REQUEST });
-    const { data } = await axios.post(
-      "https://pollapi.innotechteam.in/user/login",
+    const { data } = await api.post(
+      "/user/login",
       userData
     );
     dispatch({
