@@ -1,12 +1,15 @@
-import "./adminPollList.css";
-import { useState } from "react";
+import "./pollList.css";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import AddPoll from "../AddPoll/addPoll";
 
-const AdminPollList = () => {
+const PollList = () => {
   const [show, setShow] = useState(false);
   const [optionList, setOptionList] = useState([]);
+  useEffect(()=>{
+
+  },[])
   return (
     <div className="container-fluid">
       <div className="button-container">
@@ -20,4 +23,4 @@ const AdminPollList = () => {
   );
 };
 
-export default AdminPollList;
+export default PollList;
