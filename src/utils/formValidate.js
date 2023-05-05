@@ -6,10 +6,8 @@ import { login } from "../redux/login/actions/login";
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const signUpValidateForm = (event,formData, setFormErrors, dispatch) => {
-  console.log(formData)
   event.preventDefault()
   const { firstName, lastName, password, email, roleId } = formData;
-  console.log(roleId)
   setFormErrors({
     firstNameError: nameRegex.test(firstName)
       ? ""
@@ -19,7 +17,7 @@ export const signUpValidateForm = (event,formData, setFormErrors, dispatch) => {
       : "Last name must be at least 4 characters",
     passwordError: passwordRegex.test(password)
       ? ""
-      : "min. 8 characters, one uppercase letter, lowercase letter, number",
+      : "min. 8 characters, one uppercase letter, lowercase letter, number, special character",
     emailError: emailRegex.test(email) ? "" : "Invalid email",
     roleError: roleId !== "" ? "" : "Role must be selected",
   });
@@ -49,7 +47,7 @@ if (name === "firstName") {
     : "";
 } else if (name === "password") {
   newFormErrors.passwordError = !passwordRegex.test(value)
-    ? "min. 8 characters, one uppercase letter, lowercase letter, number"
+    ? "min. 8 characters, one uppercase letter, lowercase letter, number, special character"
     : "";
 } else if (name === "email") {
   newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";
@@ -68,7 +66,7 @@ export const signInValidateForm=(event, formData, setFormErrors, dispatch)=>{
     setFormErrors({
       passwordError: passwordRegex.test(password)
       ? ""
-      : "min. 8 characters, one uppercase letter, lowercase letter, number",
+      : "min. 8 characters, one uppercase letter, lowercase letter, number, special character",
       emailError: emailRegex.test(email) ? "" : "Invalid email",
     });
     if (passwordRegex.test(password) && emailRegex.test(email)) {
@@ -81,7 +79,7 @@ export const signInHandleBlur=(event, formErrors, setFormErrors)=>{
     let newFormErrors = { ...formErrors };
     if (name === "password") {
       newFormErrors.passwordError = !passwordRegex.test(value)
-        ? "min. 8 characters, one uppercase letter, lowercase letter, number"
+        ? "min. 8 characters, one uppercase letter, lowercase letter, number, special character"
         : "";
     } else if (name === "email") {
       newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";

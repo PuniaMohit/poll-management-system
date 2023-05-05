@@ -13,7 +13,7 @@ function App() {
     if (JSON.parse(localStorage.getItem("user"))) {
       navigate("/adminPollList");
     }
-  }, []);
+  }, [navigate]);
   return (
     <div>
       <Routes>
