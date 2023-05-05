@@ -11,14 +11,14 @@ function App() {
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("user"))) {
-      navigate("/adminPollList");
+      navigate("/pollList");
     }
   }, [navigate]);
   return (
     <div>
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
-        <Route exact path="/adminPollList" element={<PollList />} />
+        <Route exact path="/pollList" element={<PollList />} />
         <Route exact path="/signup" element={<SignUpPage />} />
       </Routes>
     </div>

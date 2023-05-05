@@ -33,7 +33,7 @@ const LoginPage = () => {
     const { userLogin, error } = successOrErrorMessage;
     if (userLogin) {
       localStorage.setItem("user", JSON.stringify(userLogin));
-      navigate("/adminPollList");
+      navigate("/pollList");
     } else if (error) {
       const errorMessage = error.message;
       setFormErrors((prevState) => ({
