@@ -4,21 +4,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useSelector} from "react-redux";
 import LoginPage from "./components/Login/login";
 import SignUpPage from "./components/Signup/signUp";
-import AdminPollList from "./components/adminPollList/adminPollList";
+import PollList from "./components/PollList/pollList";
 
 function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("user"))) {
-      navigate("/adminPollList");
+      navigate("/pollList");
     }
-  }, []);
+  }, [navigate]);
   return (
     <div>
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
-        <Route exact path="/adminPollList" element={<AdminPollList />} />
+        <Route exact path="/pollList" element={<PollList />} />
         <Route exact path="/signup" element={<SignUpPage />} />
       </Routes>
     </div>
