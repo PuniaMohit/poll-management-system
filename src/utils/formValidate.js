@@ -6,8 +6,10 @@ import { login } from "../redux/login/actions/login";
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const signUpValidateForm = (event,formData, setFormErrors, dispatch) => {
+  console.log(formData)
   event.preventDefault()
   const { firstName, lastName, password, email, roleId } = formData;
+  console.log(roleId)
   setFormErrors({
     firstNameError: nameRegex.test(firstName)
       ? ""
@@ -47,13 +49,13 @@ if (name === "firstName") {
     : "";
 } else if (name === "password") {
   newFormErrors.passwordError = !passwordRegex.test(value)
-    ? "Invalid password"
+    ? "min. 8 characters, one uppercase letter, lowercase letter, number"
     : "";
 } else if (name === "email") {
   newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";
 } else {
   newFormErrors.roleError =
-    value === "select Role" ? "Role must be selected" : "";
+    value === "0" ? "Role must be selected" : "";
 }
 setFormErrors(newFormErrors);
 };

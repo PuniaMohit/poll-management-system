@@ -53,7 +53,7 @@ const SignUpPage = () => {
       <form className="signup-form card p-3 shadow bg-white">
         <h2 className="mx-auto">Sign Up</h2>
         <div className="form-group">
-          <label htmlFor="first-name">First Name</label>
+          <label>First Name</label>
           <input
             type="text"
             name="firstName"
@@ -65,7 +65,7 @@ const SignUpPage = () => {
           <div className="error-message">{formErrors.firstNameError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="last-name">Last Name</label>
+          <label >Last Name</label>
           <input
             type="text"
             id="last-name"
@@ -78,7 +78,7 @@ const SignUpPage = () => {
           <div className="error-message">{formErrors.lastNameError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label >Password</label>
           <input
             type="password"
             id="password"
@@ -91,7 +91,7 @@ const SignUpPage = () => {
         </div>
         <div className="error-message">{formErrors.passwordError}</div>
         <div className="form-group">
-          <label htmlFor="email">Email Address</label>
+          <label >Email Address</label>
           <input
             type="email"
             id="email"
@@ -104,15 +104,14 @@ const SignUpPage = () => {
           <div className="error-message">{formErrors.emailError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="role">Role</label>
+          <label>Role</label>
           <select
-            id="role"
             className="form-control"
             onBlur={handleBlur}
             onChange={handleChange}
-            name="role"
+            name="roleId"
           >
-            <option value="select Role">Select Role</option>
+            <option value="0">Select Role</option>
             {role.map((element) => {
               return (
                 <option key={element.name} value={element.id.toString()}>
