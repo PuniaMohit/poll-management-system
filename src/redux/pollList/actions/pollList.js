@@ -4,7 +4,10 @@ import {
     POLL_LIST_SUCCESS,
     POLL_LIST_FAILURE,
 } from "../../constants";
-console.log(process.env.REACT_APP_API_URL)
+if(JSON.parse(localStorage.getItem("user"))){
+  const user=JSON.parse(localStorage.getItem("user"))
+}
+console.log(user)
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL
   });
