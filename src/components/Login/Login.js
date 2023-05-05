@@ -17,8 +17,8 @@ const LoginPage = () => {
     emailError: "",
     passwordError: "",
   });
-  const submit = () => {
-    signInValidateForm(formData, setFormErrors, dispatch);
+  const submit = (event) => {
+    signInValidateForm(event, formData, setFormErrors, dispatch);
   };
   const handleBlur = (event) => {
     signInHandleBlur(event, formErrors, setFormErrors);
@@ -54,7 +54,7 @@ const LoginPage = () => {
       <form className="signup-form card p-3 shadow bg-white">
         <h2 className="mx-auto">Login</h2>
         <div className="form-group">
-          <label htmlFor="email">Email Address</label>
+          <label>Email Address</label>
           <input
             name="email"
             onBlur={handleBlur}
@@ -64,7 +64,7 @@ const LoginPage = () => {
           <div className="error-message">{formErrors.emailError}</div>
         </div>
         <div className="form-group">
-          <label htmlFor="password">Password</label>
+          <label>Password</label>
           <input
             type="password"
             name="password"

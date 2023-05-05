@@ -26,8 +26,8 @@ const SignUpPage = () => {
     emailError: "",
     roleError: "",
   });
-  const submit = () => {
-    signUpValidateForm(formData, setFormErrors, dispatch);
+  const submit = (event) => {
+    signUpValidateForm(event, formData, setFormErrors, dispatch);
   };
   const handleChange = (event) => {
     const { name, value } = event.target;

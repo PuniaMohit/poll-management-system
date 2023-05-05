@@ -5,7 +5,8 @@ import { login } from "../redux/login/actions/login";
  const passwordRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const signUpValidateForm = (formData, setFormErrors, dispatch) => {
+export const signUpValidateForm = (event,formData, setFormErrors, dispatch) => {
+  event.preventDefault()
   const { firstName, lastName, password, email, roleId } = formData;
   setFormErrors({
     firstNameError: nameRegex.test(firstName)
@@ -59,8 +60,9 @@ setFormErrors(newFormErrors);
 
 
 
-export const signInValidateForm=(formData, setFormErrors, dispatch)=>{
-    const { email, password}=formData;
+export const signInValidateForm=(event, formData, setFormErrors, dispatch)=>{
+  event.preventDefault() 
+  const { email, password}=formData;
     setFormErrors({
       passwordError: passwordRegex.test(password)
       ? ""
