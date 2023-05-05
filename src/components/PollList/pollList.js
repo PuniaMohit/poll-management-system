@@ -8,10 +8,17 @@ import pollList from "../../redux/pollList/actions/pollList";
 
 const PollList = () => {
   const dispatch = useDispatch();
+  const [userToken, setUserToken]=useState("")
   const [show, setShow] = useState(false);
   const [optionList, setOptionList] = useState([]);
+  const userDetailsFromLocalStorage=JSON.parse(localStorage.getItem("user"))
+  useEffect(()=>{
+    console.log('hii')
+    setUserToken(userDetailsFromLocalStorage.token)
+    console.log(userToken)
+    dispatch(pollList(userToken));
+    },[userDetailsFromLocalStorage, userToken])
   useEffect(() => {
-    dispatch(pollList());
   }, []);
   return (
     <div className="container-fluid">

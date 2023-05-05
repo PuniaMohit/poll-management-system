@@ -8,16 +8,18 @@ import {
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
-const pollList = () => async (dispatch) => {
+
+const pollList = (userToken) => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
+    console.log(userToken)
     const config = {
       headers: {
-        Authorization:
-          "Bearer tejfreiofiejeijfekfjguijoekfjireokfjiokemifjowekmifj",
+        Token:
+        userToken
       },
     };
-    const { data } = await api.get("/poll/list/1?limit=4");
+    const { data } = await api.get("/poll/list/1?limit=4", config);
     console.log(data);
     dispatch({
       type: POLL_LIST_SUCCESS,
