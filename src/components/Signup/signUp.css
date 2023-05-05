@@ -44,18 +44,13 @@
   border: 1px solid gray;
 }
 
-.submit {
-  background-color: darkorange;
+.submit-button {
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 1.1rem;
   cursor: pointer;
   width: 100%;
-}
-
-.submit:hover {
-  background-color: #ff8c00;
 }
 
 .error-message {

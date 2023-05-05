@@ -38,9 +38,6 @@ const SignUpPage = () => {
   };
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("user"))) {
-      navigate("/adminPollList");
-    }
     if (successOrErrorMessage.userRegister) {
       navigate("/", { replace: true });
     } else if (successOrErrorMessage.error) {
@@ -52,95 +49,98 @@ const SignUpPage = () => {
     dispatch(roleList());
   }, [successOrErrorMessage]);
   return (
-    <Container className="container-fluid">
-      <Form className="signup-form">
-        <h2 className="signup">Sign Up</h2>
-        <Form.Group className="form-group">
-          <Form.Label className="label">First Name</Form.Label>
-          <Form.Control
+    <div className="container-fluid pt-5">
+      <form className="signup-form card p-3 shadow bg-white">
+        <h2 className="mx-auto">Sign Up</h2>
+        <div className="form-group">
+          <label htmlFor="first-name">First Name</label>
+          <input
             type="text"
-            id="first-name"
             name="firstName"
             className="form-control"
             placeholder="Enter your first name"
-            onChange={handleChange}
             onBlur={handleBlur}
-            required
+            onChange={handleChange}
           />
           <div className="error-message">{formErrors.firstNameError}</div>
-          <Form.Label className="label">Last Name</Form.Label>
-          <Form.Control
+        </div>
+        <div className="form-group">
+          <label htmlFor="last-name">Last Name</label>
+          <input
             type="text"
             id="last-name"
             name="lastName"
             className="form-control"
-            onChange={handleChange}
             placeholder="Enter your last name"
             onBlur={handleBlur}
-            required
+            onChange={handleChange}
           />
           <div className="error-message">{formErrors.lastNameError}</div>
-          <Form.Label className="label">Password</Form.Label>
-          <Form.Control
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
             type="password"
             id="password"
             name="password"
             className="form-control"
-            onChange={handleChange}
             placeholder="Enter your password"
             onBlur={handleBlur}
-            required
+            onChange={handleChange}
           />
-          <div className="error-message">{formErrors.passwordError}</div>
-          <Form.Label className="label">Email Address</Form.Label>
-          <Form.Control
+        </div>
+        <div className="error-message">{formErrors.passwordError}</div>
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
             type="email"
             id="email"
             name="email"
             className="form-control"
-            onChange={handleChange}
             placeholder="Enter your email address"
             onBlur={handleBlur}
-            required
+            onChange={handleChange}
           />
           <div className="error-message">{formErrors.emailError}</div>
-          <Form.Label className="label">Role</Form.Label>
-          <Form.Select
+        </div>
+        <div className="form-group">
+          <label htmlFor="role">Role</label>
+          <select
             id="role"
             className="form-control"
             onBlur={handleBlur}
             onChange={handleChange}
-            name="roleId"
+            name="role"
           >
-            <option value="0">Select Role</option>
-            {role.map((element, index) => {
+            <option value="select Role">Select Role</option>
+            {role.map((element) => {
               return (
                 <option key={element.name} value={element.id.toString()}>
                   {element.name}
                 </option>
               );
             })}
-          </Form.Select>
+          </select>
           <div className="error-message">{formErrors.roleError}</div>
-        </Form.Group>
-        <Button
-          className="submit"
+        </div>
+        <button
+          className="btn btn-primary"
           onClick={submit}
           disabled={successOrErrorMessage.loading ? true : false}
         >
           {successOrErrorMessage.loading ? "Loading..." : "Submit"}
-        </Button>
-        <div className="signin-message">
+        </button>
+        <div className="mx-auto mt-2">
           Already have an account?{" "}
           <span
-            className="navigate-signin"
+            className="navigate-signin text-primary"
             onClick={() => navigate("/", { replace: true })}
           >
             Login Here!
           </span>
         </div>
-      </Form>
-    </Container>
+      </form>
+    </div>
   );
 };
 

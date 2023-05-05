@@ -1,37 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.container-fluid {
-  height: 100vh;
-  background-color: #f6f9ff;
-  padding-top: 10%;
-}
-
-.signin-form {
-  margin: 0 auto;
-  width: 25%;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
-              0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.signin-form h2 {
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.form-group {
-  display: flex; 
-  flex-direction: column;
-   margin-bottom: 10px;
-}
-
 .form-group .label {
   margin-bottom: 5px;
   font-size: 1.2rem;
@@ -44,32 +10,7 @@
   border: 1px solid gray;
 }
 
-.submit {
-  background-color: darkorange;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-.submit:hover {
-  background-color: #ff8c00;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.8rem;
-}
-
 .navigate-signup{
-  margin-left: 5px;
-  color:#007bff ;
   cursor: pointer;
 }
 
-.signup-message{
-  text-align: center;
-  margin-top: 5px;
-}

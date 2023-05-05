@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import { signInValidateForm } from "../../utils/formValidate";
@@ -31,73 +30,68 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("user"))) {
+    const { userLogin, error } = successOrErrorMessage;
+    if (userLogin) {
+      localStorage.setItem("user", JSON.stringify(userLogin));
       navigate("/adminPollList");
-    } else {
-      if (successOrErrorMessage.userLogin) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(successOrErrorMessage.userLogin)
-        );
-        navigate("/adminPollList");
-      } else if (successOrErrorMessage.error) {
-        if (successOrErrorMessage.error.message === "password is incorrect") {
-          setFormErrors((prevState) => ({
-            ...prevState,
-            passwordError: "password is incorrect",
-          }));
-        } else if (
-          successOrErrorMessage.error.message === "user data not found"
-        )
-          setFormErrors((prevState) => ({
-            ...prevState,
-            emailError: "user data not found",
-          }));
-      }
+    } else if (error) {
+      const errorMessage = error.message;
+      setFormErrors((prevState) => ({
+        emailError:
+          errorMessage === "user data not found"
+            ? "user data not found"
+            : prevState.emailError,
+        passwordError:
+          errorMessage === "password is incorrect"
+            ? "password is incorrect"
+            : prevState.passwordError,
+      }));
     }
   }, [successOrErrorMessage]);
 
   return (
-    <Container className="container-fluid">
-      <Form className="signin-form">
-        <h2 className="login">Login</h2>
-        <Form.Group className="form-group">
-          <Form.Label className="label">Email Address</Form.Label>
-          <Form.Control
-            type="email"
+    <div className="container-fluid pt-5">
+      <form className="signup-form card p-3 shadow bg-white">
+        <h2 className="mx-auto">Login</h2>
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
             name="email"
-            value={formData.email}
-            onChange={handleChange}
             onBlur={handleBlur}
+            onChange={handleChange}
             placeholder="Enter your email address"
           />
           <div className="error-message">{formErrors.emailError}</div>
-          <Form.Label className="label">Password</Form.Label>
-          <Form.Control
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
             type="password"
             name="password"
-            value={formData.password}
-            onChange={handleChange}
             onBlur={handleBlur}
+            onChange={handleChange}
             placeholder="Enter your password"
           />
-          <div className="error-message">{formErrors.passwordError}</div>
-        </Form.Group>
-        <Button
-          className="submit"
+        </div>
+        <div className="error-message">{formErrors.passwordError}</div>
+        <button
+          className="btn btn-primary"
           onClick={submit}
           disabled={successOrErrorMessage.loading ? true : false}
         >
           {successOrErrorMessage.loading ? "Loading..." : "Submit"}
-        </Button>
-        <div className="signup-message">
-          No Account?
-          <span className="navigate-signup" onClick={() => navigate("/signup")}>
+        </button>
+        <div className="mx-auto mt-2">
+          No Account?{" "}
+          <span
+            className="navigate-signup text-primary"
+            onClick={() => navigate("./signup")}
+          >
             Signup
           </span>
         </div>
-      </Form>
-    </Container>
+      </form>
+    </div>
   );
 };
 
