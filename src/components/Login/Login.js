@@ -2,68 +2,50 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
-import { login } from "../../redux/login/actions/login";
+import { signInValidateForm } from "../../utils/formValidate";
+import { signInHandleBlur } from "../../utils/formValidate";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const successOrErrorMessage = useSelector((state) => state.login);
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const passwordRegex =
-    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validateForm = (event) => {
-    event.preventDefault();
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const passwordValid = passwordRegex.test(password);
-    const emailValid = emailRegex.test(email);
-    setEmailError("");
-    setPasswordError("");
-    if (emailValid && passwordValid) {
-      let userLogin = {};
-      userLogin.email = email;
-      userLogin.password = password;
-      dispatch(login(userLogin));
-    } else {
-      if (!emailValid) {
-        setEmailError("Invalid email");
-      }
-      if (!passwordValid) {
-        setPasswordError(
-          "min. 8 characters, one uppercase letter, lowercase letter, number"
-        );
-      }
-    }
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [formErrors, setFormErrors] = useState({
+    emailError: "",
+    passwordError: "",
+  });
+  const submit = () => {
+    signInValidateForm(formData, setFormErrors, dispatch);
   };
   const handleBlur = (event) => {
+    signInHandleBlur(event, formErrors, setFormErrors);
+  };
+
+  const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "email") {
-      setEmailError(!emailRegex.test(value) ? "Invalid email" : "");
-    } else if (name === "password") {
-      setPasswordError(!passwordRegex.test(value) ? "Invalid password" : "");
-    }
+    setFormData({ ...formData, [name]: value });
   };
 
   useEffect(() => {
-    if (JSON.parse(sessionStorage.getItem("user"))) {
+    const { userLogin, error } = successOrErrorMessage;
+    if (userLogin) {
+      localStorage.setItem("user", JSON.stringify(userLogin));
       navigate("/adminPollList");
-    } else {
-      if (successOrErrorMessage.userLogin) {
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify(successOrErrorMessage.userLogin)
-        );
-        navigate("/adminPollList");
-      } else if (successOrErrorMessage.error) {
-        if (successOrErrorMessage.error.message === "password is incorrect") {
-          setPasswordError("password is incorrect");
-        } else if (
-          successOrErrorMessage.error.message === "user data not found"
-        )
-          setEmailError("user data not found");
-      }
+    } else if (error) {
+      const errorMessage = error.message;
+      setFormErrors((prevState) => ({
+        emailError:
+          errorMessage === "user data not found"
+            ? "user data not found"
+            : prevState.emailError,
+        passwordError:
+          errorMessage === "password is incorrect"
+            ? "password is incorrect"
+            : prevState.passwordError,
+      }));
     }
   }, [successOrErrorMessage]);
 
@@ -74,30 +56,27 @@ const LoginPage = () => {
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
-            type="email"
-            id="email"
             name="email"
             onBlur={handleBlur}
+            onChange={handleChange}
             placeholder="Enter your email address"
-            required
           />
-          <div className="error-message">{emailError}</div>
+          <div className="error-message">{formErrors.emailError}</div>
         </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            id="password"
             name="password"
             onBlur={handleBlur}
+            onChange={handleChange}
             placeholder="Enter your password"
-            required
           />
         </div>
-        <div className="error-message">{passwordError}</div>
+        <div className="error-message">{formErrors.passwordError}</div>
         <button
-          type="submit"
-          onClick={validateForm}
+          className="btn btn-primary"
+          onClick={submit}
           disabled={successOrErrorMessage.loading ? true : false}
         >
           {successOrErrorMessage.loading ? "Loading..." : "Submit"}
@@ -105,7 +84,7 @@ const LoginPage = () => {
         <div className="mx-auto mt-2">
           No Account?{" "}
           <span
-            className="navigate-signup"
+            className="navigate-signup text-primary"
             onClick={() => navigate("./signup")}
           >
             Signup

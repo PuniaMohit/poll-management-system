@@ -19,7 +19,6 @@ const PollList = () => {
         <Button variant="primary" onClick={() => setShow(true)}>
           Custom Width Modal
         </Button>
-
         <AddPoll show={show} setShow={setShow} setOptionList={setOptionList} />
       </div>
     </div>

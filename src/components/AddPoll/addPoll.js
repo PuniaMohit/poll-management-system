@@ -4,37 +4,34 @@ import { PlusCircleFill } from "react-bootstrap-icons";
 
 function AddPoll(props) {
   const { show, setShow, setOptionsList } = props;
-  const [inputValue, setInputValue] = useState("");
-  const [inputList, setInputList] = useState([]);
+  const [pollOptionInput, setPollOptionInput] = useState("");
+  const [pollOptions, setPollOptions] = useState([]);
   const [addButtonDisabled, setAddButtonDisabled] = useState(true);
-  const [plusSignDisabled, setPlusSignDisabled] = useState(false);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-    if (event.target.value.trim() === "" || inputList.length >= 3) {
+  const handlePollOption = (event) => {
+    setPollOptionInput(event.target.value);
+    if (event.target.value.trim() === "" || pollOptions.length >= 3) {
       setAddButtonDisabled(true);
-      setPlusSignDisabled(true);
     } else {
       setAddButtonDisabled(false);
-      setPlusSignDisabled(false);
     }
   };
 
-  const handleAddInput = () => {
-    if (inputValue.trim() !== "") {
-      setInputList([...inputList, inputValue]);
-      setInputValue("");
+  const handleAddPollOption = () => {
+    if (pollOptionInput.trim() !== "") {
+      setPollOptions([...pollOptions, pollOptionInput]);
+      setPollOptionInput("");
       setAddButtonDisabled(true);
-      if (inputList.length >= 2) {
-        setPlusSignDisabled(true);
+      if (pollOptions.length >= 2) {
+        setAddButtonDisabled(true)
       }
     }
   };
 
   const handleAddPoll = () => {
-    if (inputList.length >= 3) {
-      setOptionsList(inputList);
-      setInputList([]);
+    if (pollOptions.length >= 3) {
+      setOptionsList(pollOptions);
+      setPollOptions([]);
     }
   };
   return (
@@ -57,18 +54,18 @@ function AddPoll(props) {
               <InputGroup className="mb-3">
                 <FormControl
                   placeholder="Enter a poll option"
-                  value={inputValue}
-                  onChange={handleInputChange}
+                  value={pollOptionInput}
+                  onChange={handlePollOption}
                 />
                 <Button
                   variant="outline-secondary"
                   disabled={addButtonDisabled}
-                  onClick={handleAddInput}
+                  onClick={handleAddPollOption}
                 >
                   <PlusCircleFill />
                 </Button>
               </InputGroup>
-              {inputList.map((input, index) => (
+              {pollOptions.map((input, index) => (
                 <div key={index} className="input-list">
                   {input}
                 </div>
@@ -78,7 +75,7 @@ function AddPoll(props) {
               <Button
                 className="cursor-pointer"
                 variant="primary"
-                disabled={inputList.length < 3}
+                disabled={pollOptions.length < 3}
                 onClick={handleAddPoll}
               >
                 Add New Poll

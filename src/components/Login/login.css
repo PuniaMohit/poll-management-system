@@ -1,62 +1,16 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.container-fluid {
-  background-color: #f6f9ff;
-  width: 100vw;
-height: 100vh;
-}
-.login-form {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  width: 30%;
-  margin: 0 auto;
-}
-
-.login-form h2 {
-  margin-bottom: 20px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.form-group label {
+.form-group .label {
   margin-bottom: 5px;
+  font-size: 1.2rem;
+  margin-top: 5px;
 }
 
 .form-group input {
-  padding: 5px;
-  border-radius: 5px;
+  padding: 10px;
   border: none;
-}
-
-button[type="submit"] {
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-button[type="submit"]:hover {
-  background-color: darkorange;
-}
-
-.error-message {
-  color: red;
-  font-size: 0.8rem;
+  border: 1px solid gray;
 }
 
 .navigate-signup{
-  margin-left: 5px;
-  color:#007bff ;
   cursor: pointer;
 }
+
