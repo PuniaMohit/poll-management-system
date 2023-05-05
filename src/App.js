@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useSelector} from "react-redux";
 import LoginPage from "./components/Login/login";
 import SignUpPage from "./components/Signup/signUp";
-import AdminPollList from "./components/adminPollList/adminPollList";
+import PollList from "./components/PollList/pollList";
 
 function App() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function App() {
     <div>
       <Routes>
         <Route exact path="/" element={<LoginPage />} />
-        <Route exact path="/adminPollList" element={<AdminPollList />} />
+        <Route exact path="/adminPollList" element={<PollList />} />
         <Route exact path="/signup" element={<SignUpPage />} />
       </Routes>
     </div>
