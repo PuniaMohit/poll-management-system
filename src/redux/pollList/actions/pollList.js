@@ -7,7 +7,7 @@ import {
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL
   });
- const roleList = () => async (dispatch) => {
+ const pollList = () => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
     const { data } = await api.get(
@@ -26,4 +26,4 @@ const api = axios.create({
   }
 };
 
-export default roleList
+export default pollList
