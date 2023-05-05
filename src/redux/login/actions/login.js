@@ -18,7 +18,7 @@ export const login = (userData) => async (dispatch) => {
     );
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: data,
+      payload: data.user,
     });
   } catch (error) {
     dispatch({
