@@ -4,12 +4,19 @@ import {
     POLL_LIST_SUCCESS,
     POLL_LIST_FAILURE,
 } from "../../constants";
+console.log(process.env.REACT_APP_API_URL)
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_URL
   });
  const pollList = () => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
+console.log("ufdh")
+const config = {
+  headers: {
+    Authorization: "Bearer tejfreiofiejeijfekfjguijoekfjireokfjiokemifjowekmifj",
+  },
+};
     const { data } = await api.get(
       "/poll/list/1?limit=4",
     );

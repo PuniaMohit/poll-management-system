@@ -46,7 +46,7 @@ if (name === "firstName") {
     : "";
 } else if (name === "password") {
   newFormErrors.passwordError = !passwordRegex.test(value)
-    ? "Invalid password"
+    ? "min. 8 characters, one uppercase letter, lowercase letter, number"
     : "";
 } else if (name === "email") {
   newFormErrors.emailError = !emailRegex.test(value) ? "Invalid email" : "";
