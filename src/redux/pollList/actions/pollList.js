@@ -12,18 +12,15 @@ const api = axios.create({
 const pollList = (userToken) => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
-    console.log(userToken)
     const config = {
       headers: {
-        Token:
-        userToken
+        Token: userToken,
       },
     };
     const { data } = await api.get("/poll/list/1?limit=4", config);
-    console.log(data);
     dispatch({
       type: POLL_LIST_SUCCESS,
-      payload: data,
+      payload: data.rows,
     });
   } catch (error) {
     dispatch({
