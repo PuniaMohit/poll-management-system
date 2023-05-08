@@ -1,13 +1,10 @@
-import axios from "axios";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
 } from "../../constants";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
-});
+import api from "../../api"
 
 export const login = (userData) => async (dispatch) => {
   try {

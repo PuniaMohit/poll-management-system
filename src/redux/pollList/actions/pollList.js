@@ -1,23 +1,15 @@
-import axios from "axios";
 import {
   POLL_LIST_REQUEST,
   POLL_LIST_SUCCESS,
   POLL_LIST_FAILURE,
 } from "../../constants";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-});
+import api from "../../Tokenapi"
 
-const pollList = (userToken) => async (dispatch) => {
+const pollList = () => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
-    const config = {
-      headers: {
-        Token: userToken,
-      },
-    };
-    const { data } = await api.get("/poll/list/1?limit=4", config);
+    const { data } = await api.get("/poll/list/1?limit=4");
     dispatch({
       type: POLL_LIST_SUCCESS,
       payload: data.rows,

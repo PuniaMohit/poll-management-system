@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { InputGroup, FormControl, Button, Modal } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
+import { addPoll } from "../../redux/addPoll/actions/addPoll";
+import pollList from "../../redux/pollList/actions/pollList";
 
-function AddPoll(props) {
-  const { show, setShow, setPollsList } = props;
+const AddPoll = (props) => {
+  const dispatch = useDispatch();
+  const { show, setShow } = props;
   const [pollTitle, setPollTitle] = useState("");
   const [pollOptionInput, setPollOptionInput] = useState("");
   const [pollOptions, setPollOptions] = useState([]);
@@ -25,7 +29,7 @@ function AddPoll(props) {
       if (pollOptions.length >= 3) {
         setOptionError("You can only enter 3 options maximum.");
       } else {
-        setPollOptions([...pollOptions, pollOptionInput]);
+        setPollOptions([...pollOptions, { optionTitle: pollOptionInput }]);
         setPollOptionInput("");
       }
     } else {
@@ -34,23 +38,39 @@ function AddPoll(props) {
   };
 
   const handleAddPoll = () => {
-    let error = false;
+    const titleRegex = /^.{8,}$/;
     if (pollTitle.trim() === "") {
       setTitleError("Enter poll title");
-      error = true;
+    } else if (!titleRegex.test(pollTitle.trim())) {
+      setTitleError("Title should be of minimum 8 characters");
     }
-    if (pollOptions.length < 3) {
+    if (pollOptionInput === "") {
+      setOptionError("Enter option");
+    } else if (pollOptions.length < 3) {
       setOptionError("Enter at least three options");
-      error = true;
     }
-    if (!error) {
+    if (pollOptions.length === 3) {
       const newPoll = { title: pollTitle, options: pollOptions };
-      setPollsList((prevPolls) => [...prevPolls, newPoll]);
+      dispatch(addPoll(newPoll));
+      // setTimeOut(()=>dispatch(pollList()),1000)
       setPollTitle("");
       setPollOptions([]);
+      setTitleError("");
+      setOptionError("");
+      setPollOptionInput("");
       setShow(false);
     }
   };
+
+  const closeButton = () => {
+    setPollTitle("");
+    setPollOptions([]);
+    setTitleError("");
+    setOptionError("");
+    setPollOptionInput("");
+  };
+
+  
 
   return (
     <Modal
@@ -59,7 +79,7 @@ function AddPoll(props) {
       dialogClassName="modal-90w"
       aria-labelledby="example-custom-modal-styling-title"
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton onClick={closeButton}>
         <Modal.Title id="example-custom-modal-styling-title">
           Add Poll
         </Modal.Title>
@@ -73,7 +93,7 @@ function AddPoll(props) {
               onChange={handlePollTitle}
             />
           </InputGroup>
-          <div className="error-message">{titleError}</div>
+          <div className="error-message mb-2">{titleError}</div>
 
           <InputGroup className="mb-3">
             <FormControl
@@ -85,10 +105,10 @@ function AddPoll(props) {
               <PlusCircleFill />
             </Button>
           </InputGroup>
-          <div className="error-message">{optionError}</div>
+          <div className="error-message mb-2">{optionError}</div>
           {pollOptions.map((option, index) => (
             <div key={index} className="input-list">
-              {option}
+              {option.optionTitle}
             </div>
           ))}
           <div className="add-poll-container">
@@ -96,7 +116,6 @@ function AddPoll(props) {
               className="cursor-pointer"
               variant="primary"
               onClick={handleAddPoll}
-              disabled={titleError || optionError}
             >
               Add New Poll
             </Button>
@@ -105,6 +124,6 @@ function AddPoll(props) {
       </Modal.Body>
     </Modal>
   );
-}
+};
 
 export default AddPoll;

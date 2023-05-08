@@ -16,16 +16,13 @@ const pollListReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        pollListTitle: "",
-        pollListOptions: [],
+        pollList: [],
         error: null,
       };
     case POLL_LIST_SUCCESS:
       return {
         ...state,
         loading: false,
-        // pollListTitle: action.payload.title,
-        // pollListOptions: action.payload.optionList,
         pollList: action.payload,
         error: null,
       };
@@ -33,8 +30,7 @@ const pollListReducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        pollListTitle: "",
-        pollListOptions: [],
+        pollLis: [],
         error: action.payload,
       };
     default:
