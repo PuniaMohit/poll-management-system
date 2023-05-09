@@ -1,39 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { InputGroup, FormControl, Button, Modal } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
+import { addPoll } from "../../redux/addPoll/actions/addPoll";
+import pollList from "../../redux/pollList/actions/pollList";
 
-function AddPoll(props) {
-  const { show, setShow, setOptionsList } = props;
+const AddPoll = (props) => {
+  const dispatch = useDispatch();
+  const { show, setShow } = props;
+  const [pollTitle, setPollTitle] = useState("");
   const [pollOptionInput, setPollOptionInput] = useState("");
   const [pollOptions, setPollOptions] = useState([]);
-  const [addButtonDisabled, setAddButtonDisabled] = useState(true);
+  const [titleError, setTitleError] = useState("");
+  const [optionError, setOptionError] = useState("");
+
+  const handlePollTitle = (event) => {
+    setPollTitle(event.target.value);
+    setTitleError("");
+  };
 
   const handlePollOption = (event) => {
     setPollOptionInput(event.target.value);
-    if (event.target.value.trim() === "" || pollOptions.length >= 3) {
-      setAddButtonDisabled(true);
-    } else {
-      setAddButtonDisabled(false);
-    }
+    setOptionError("");
   };
 
   const handleAddPollOption = () => {
     if (pollOptionInput.trim() !== "") {
-      setPollOptions([...pollOptions, pollOptionInput]);
-      setPollOptionInput("");
-      setAddButtonDisabled(true);
-      if (pollOptions.length >= 2) {
-        setAddButtonDisabled(true)
+      if (pollOptions.length >= 3) {
+        setOptionError("You can only enter 3 options maximum.");
+      } else {
+        setPollOptions([...pollOptions, { optionTitle: pollOptionInput }]);
+        setPollOptionInput("");
       }
+    } else {
+      setOptionError("Enter poll option");
     }
   };
 
   const handleAddPoll = () => {
-    if (pollOptions.length >= 3) {
-      setOptionsList(pollOptions);
+    const titleRegex = /^.{8,}$/;
+    if (pollTitle.trim() === "") {
+      setTitleError("Enter poll title");
+    } else if (!titleRegex.test(pollTitle.trim())) {
+      setTitleError("Title should be of minimum 8 characters");
+    }
+    if (pollOptionInput === "") {
+      setOptionError("Enter option");
+    } else if (pollOptions.length < 3) {
+      setOptionError("Enter at least three options");
+    }
+    if (pollOptions.length === 3) {
+      const newPoll = { title: pollTitle, options: pollOptions };
+      dispatch(addPoll(newPoll));
+      setPollTitle("");
       setPollOptions([]);
+      setTitleError("");
+      setOptionError("");
+      setPollOptionInput("");
+      setShow(false);
     }
   };
+
+  const closeButton = () => {
+    setPollTitle("");
+    setPollOptions([]);
+    setTitleError("");
+    setOptionError("");
+    setPollOptionInput("");
+  };
+
+  
+
   return (
     <Modal
       show={show}
@@ -41,51 +78,50 @@ function AddPoll(props) {
       dialogClassName="modal-90w"
       aria-labelledby="example-custom-modal-styling-title"
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton onClick={closeButton}>
         <Modal.Title id="example-custom-modal-styling-title">
-          Custom Modal Styling
+          Add Poll
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
-          <div className="container">
-            <h1>Create a Poll</h1>
-            <div className="input-container">
-              <InputGroup className="mb-3">
-                <FormControl
-                  placeholder="Enter a poll option"
-                  value={pollOptionInput}
-                  onChange={handlePollOption}
-                />
-                <Button
-                  variant="outline-secondary"
-                  disabled={addButtonDisabled}
-                  onClick={handleAddPollOption}
-                >
-                  <PlusCircleFill />
-                </Button>
-              </InputGroup>
-              {pollOptions.map((input, index) => (
-                <div key={index} className="input-list">
-                  {input}
-                </div>
-              ))}
+        <div className="container">
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder="Enter poll title"
+              value={pollTitle}
+              onChange={handlePollTitle}
+            />
+          </InputGroup>
+          <div className="error-message mb-2">{titleError}</div>
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder="Enter poll option"
+              value={pollOptionInput}
+              onChange={handlePollOption}
+            />
+            <Button variant="outline-secondary" onClick={handleAddPollOption}>
+              <PlusCircleFill />
+            </Button>
+          </InputGroup>
+          <div className="error-message mb-2">{optionError}</div>
+          {pollOptions.map((option, index) => (
+            <div key={index} className="input-list">
+              {option.optionTitle}
             </div>
-            <div className="add-poll-container">
-              <Button
-                className="cursor-pointer"
-                variant="primary"
-                disabled={pollOptions.length < 3}
-                onClick={handleAddPoll}
-              >
-                Add New Poll
-              </Button>
-            </div>
+          ))}
+          <div className="add-poll-container">
+            <Button
+              className="cursor-pointer"
+              variant="primary"
+              onClick={handleAddPoll}
+            >
+              Add New Poll
+            </Button>
           </div>
-        </p>
+        </div>
       </Modal.Body>
     </Modal>
   );
-}
+};
 
 export default AddPoll;

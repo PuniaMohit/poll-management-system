@@ -1,13 +1,10 @@
-import axios from "axios";
 import {
   ROLELIST_REQUEST,
   ROLELIST_SUCCESS,
   ROLELIST_FAILURE,
 } from "../../constants";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
-});
+import api from "../../api"
 
  const roleList = () => async (dispatch) => {
   try {

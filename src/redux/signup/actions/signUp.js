@@ -1,13 +1,10 @@
-import axios from "axios";
 import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAILURE,
 } from "../../constants";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
-});
+import api from "../../api"
 
 export const register = (userData) => async (dispatch) => {
   try {

@@ -1,0 +1,44 @@
+.button-container{
+    display: flex;
+    justify-content: flex-end;
+    /* width: 30%; */
+}
+
+.title{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+
+.add-poll-button{
+margin-right: 2%;
+}
+
+.poll-title{
+    font-size: 1.5rem;
+    color: #04aa6d;
+    font-weight:700 ;
+    padding-right: 1%;
+}
+
+.edit-button{
+    margin-left: 1%;
+}
+
+.radio{
+    margin-left: 1%;
+}
+
+.radio-container{
+    display: flex;
+    align-items: center;
+}
+
+.edit-button-radio{
+    margin-left: 1%;
+    color: gray;
+    cursor: pointer;
+font-size: 0.6rem;
+}
