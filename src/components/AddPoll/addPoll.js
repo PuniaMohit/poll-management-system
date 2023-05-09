@@ -52,7 +52,6 @@ const AddPoll = (props) => {
     if (pollOptions.length === 3) {
       const newPoll = { title: pollTitle, options: pollOptions };
       dispatch(addPoll(newPoll));
-      // setTimeOut(()=>dispatch(pollList()),1000)
       setPollTitle("");
       setPollOptions([]);
       setTitleError("");
@@ -94,7 +93,6 @@ const AddPoll = (props) => {
             />
           </InputGroup>
           <div className="error-message mb-2">{titleError}</div>
-
           <InputGroup className="mb-3">
             <FormControl
               placeholder="Enter poll option"

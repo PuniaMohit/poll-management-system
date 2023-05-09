@@ -10,6 +10,7 @@ const pollList = () => async (dispatch) => {
   try {
     dispatch({ type: POLL_LIST_REQUEST });
     const { data } = await api.get("/poll/list/1?limit=4");
+    console.log(data.response)
     dispatch({
       type: POLL_LIST_SUCCESS,
       payload: data.rows,

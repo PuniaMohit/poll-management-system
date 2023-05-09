@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Form } from "react-bootstrap";
 import { Trash } from "react-bootstrap-icons";
+import { PencilSquare } from "react-bootstrap-icons";
 import AddPoll from "../AddPoll/addPoll";
 import pollList from "../../redux/pollList/actions/pollList";
 import voteCount from "../../redux/voteCount/actions/votecount";
 import deletePoll from "../../redux/delete/actions/delete";
+import UpdatePollTitle from "../UpdatePollTitle/updatePollTitle";
 
 const PollList = () => {
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ const PollList = () => {
   const pollQuestion = useSelector((state) => state.pollList.pollList);
   const pollCreated = useSelector((state) => state.addPoll.pollAdded);
   const [show, setShow] = useState(false);
+  const [showUpdatePollModal, setShowUpdatePollMOdal] = useState(false);
   const userDetailsFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -36,10 +39,6 @@ const PollList = () => {
       setPollIDs(storedPollIDs);
     }
   }, []);
-
-  // useEffect(()=>{
-  //    dispatch(pollList())
-  // },[pollCreated, dispatch])....commented for furter refrence
 
   const handleOptionClick = (pollID) => {
     if (!answeredPollIDs.includes(pollID)) {
@@ -67,37 +66,31 @@ const PollList = () => {
     <div className="container">
       {userDetailsFromLocalStorage.user.roleId === 1 && (
         <div className="button-container">
-          <div className=" mr-3">
             <Button
               variant="primary"
-              className="add-poll-button"
+              className="add-poll-button mt-3 rounded-pill btn-lg"
               onClick={() => setShow(true)}
             >
               Add Poll
             </Button>
-          </div>
-
-          <Button variant="primary" className="logout-button" onClick={logOut}>
+          <Button variant="primary" className="logout-button mt-3 rounded-pill btn-lg" onClick={logOut}>
             Logout
           </Button>
         </div>
       )}
       {pollQuestion.map(({ title, optionList, id }, index) => (
         <div key={id}>
-          <div>
-            Q.{index + 1} {title}{" "}
-            <Button
-              variant="outline-secondary"
-              onClick={() => dispatch(deletePoll(id))}
-            >
-              <Trash />
-            </Button>
-          </div>
+          <div className="title">
+           <div className="poll-title">{title}</div>
+           <Button className="btn-sm btn-light" onClick={()=>dispatch(deletePoll(id))}><Trash/></Button>
+           <Button className="btn-sm btn-light edit-button" onClick={()=>setShowUpdatePollMOdal(true)}><PencilSquare/></Button>
+           </div>
+           <UpdatePollTitle show={showUpdatePollModal} setShow={setShowUpdatePollMOdal} id={id}/>
           {optionList.map((element) => {
             const isChecked = answeredPollIDs.includes(element.pollId);
             const isDisabled =
               pollIDs.includes(element.pollId) && element.pollId !== isChecked;
-            return (
+            return (<div className="radio-container">
               <Form.Check
                 key={element.id}
                 label={element.optionTitle}
@@ -110,9 +103,10 @@ const PollList = () => {
                 name={`group-${index}`}
                 type="radio"
                 value={element.optionTitle}
-                id={element.optionTitle}
+                className="radio"
               />
-            );
+                <PencilSquare className="edit-button-radio"/>
+              </div> );
           })}
         </div>
       ))}
