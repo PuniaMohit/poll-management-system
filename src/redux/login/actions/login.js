@@ -1,13 +1,11 @@
-import axios from "axios";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  REMOVE_USER_DATA
 } from "../../constants";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
-});
+import api from "../../api"
 
 export const login = (userData) => async (dispatch) => {
   try {
@@ -18,7 +16,7 @@ export const login = (userData) => async (dispatch) => {
     );
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: data.user,
+      payload: data,
     });
   } catch (error) {
     dispatch({
@@ -27,3 +25,7 @@ export const login = (userData) => async (dispatch) => {
     });
   }
 };
+
+export const removeUserData =()=>(dispatch)=>{
+  dispatch({type:REMOVE_USER_DATA})
+}
