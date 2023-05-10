@@ -21,7 +21,7 @@ const PollList = () => {
   const [show, setShow] = useState(false);
   const [showUpdatePollModal, setShowUpdatePollMOdal] = useState(false);
   const userDetailsFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-
+  console.log(userDetailsFromLocalStorage.user.roleId === 1);
   useEffect(() => {
     dispatch(pollList());
   }, [dispatch]);
@@ -57,56 +57,80 @@ const PollList = () => {
     }
   };
 
-  const logOut = () => {
-    localStorage.clear();
-    navigate("/", { replace: true });
-  };
 
   return (
     <div className="container">
-      {userDetailsFromLocalStorage.user.roleId === 1 && (
-        <div className="button-container">
-            <Button
-              variant="primary"
-              className="add-poll-button mt-3 rounded-pill btn-lg"
-              onClick={() => setShow(true)}
-            >
-              Add Poll
-            </Button>
-          <Button variant="primary" className="logout-button mt-3 rounded-pill btn-lg" onClick={logOut}>
-            Logout
+      <div className="button-container">
+        {userDetailsFromLocalStorage.user.roleId === 1 && (
+          <Button
+            variant="primary"
+            className="add-poll-button mt-3 rounded-pill btn-lg"
+            onClick={() => setShow(true)}
+          >
+            Add Poll
           </Button>
-        </div>
-      )}
+        )}
+        <Button
+          onClick={()=>{ localStorage.clear();
+            navigate("/", { replace: true })}}
+          variant="primary"
+          className="logout-button mt-3 rounded-pill btn-lg"
+        >
+          Logout
+        </Button>
+      </div>
+
       {pollQuestion.map(({ title, optionList, id }, index) => (
         <div key={id}>
           <div className="title">
-           <div className="poll-title">{title}</div>
-           <Button className="btn-sm btn-light" onClick={()=>dispatch(deletePoll(id))}><Trash/></Button>
-           <Button className="btn-sm btn-light edit-button" onClick={()=>setShowUpdatePollMOdal(true)}><PencilSquare/></Button>
-           </div>
-           <UpdatePollTitle show={showUpdatePollModal} setShow={setShowUpdatePollMOdal} id={id}/>
+            <div className="poll-title">{title}</div>
+            {userDetailsFromLocalStorage.user.roleId === 1 && (
+              <div>
+                <Button
+                  className="btn-sm btn-light"
+                  onClick={() => dispatch(deletePoll(id))}
+                >
+                  <Trash />
+                </Button>
+                <Button
+                  className="btn-sm btn-light edit-button"
+                  onClick={() => setShowUpdatePollMOdal(true)}
+                >
+                  <PencilSquare />
+                </Button>
+              </div>
+            )}
+          </div>
+          <UpdatePollTitle
+            show={showUpdatePollModal}
+            setShow={setShowUpdatePollMOdal}
+            id={id}
+          />
           {optionList.map((element) => {
             const isChecked = answeredPollIDs.includes(element.pollId);
             const isDisabled =
               pollIDs.includes(element.pollId) && element.pollId !== isChecked;
-            return (<div className="radio-container">
-              <Form.Check
-                key={element.id}
-                label={element.optionTitle}
-                disabled={isDisabled}
-                defaultChecked={isChecked}
-                onClick={() => {
-                  handleOptionClick(element.pollId);
-                  dispatch(voteCount({ optionId: element.id }));
-                }}
-                name={`group-${index}`}
-                type="radio"
-                value={element.optionTitle}
-                className="radio"
-              />
-                <PencilSquare className="edit-button-radio"/>
-              </div> );
+            return (
+              <div className="radio-container">
+                <Form.Check
+                  key={element.id}
+                  label={element.optionTitle}
+                  disabled={isDisabled}
+                  defaultChecked={isChecked}
+                  onClick={() => {
+                    handleOptionClick(element.pollId);
+                    dispatch(voteCount({ optionId: element.id }));
+                  }}
+                  name={`group-${index}`}
+                  type="radio"
+                  value={element.optionTitle}
+                  className="radio"
+                />
+                {userDetailsFromLocalStorage.user.roleId === 1 && (
+                  <PencilSquare className="edit-button-radio" />
+                )}
+              </div>
+            );
           })}
         </div>
       ))}

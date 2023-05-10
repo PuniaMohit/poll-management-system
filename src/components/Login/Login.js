@@ -32,6 +32,7 @@ const LoginPage = () => {
   useEffect(() => {
     const { userLogin, error } = successOrErrorMessage;
     if (userLogin) {
+      console.log("hello")
       localStorage.setItem("user", JSON.stringify(userLogin));
       navigate("/pollList");
     } else if (error) {
