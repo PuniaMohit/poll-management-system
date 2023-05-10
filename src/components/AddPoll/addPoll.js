@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputGroup, FormControl, Button, Modal } from "react-bootstrap";
-import { PlusCircleFill } from "react-bootstrap-icons";
+import { PlusCircleFill, PencilSquare, Trash } from "react-bootstrap-icons";
 import { addPoll } from "../../redux/addPoll/actions/addPoll";
+import pollList from "../../redux/pollList/actions/pollList";
 import "./addPoll.css";
 import { addPollOption } from "../../utils/addPollValidation";
 import { addNewPoll } from "../../utils/addPollValidation";
@@ -15,6 +16,7 @@ const AddPoll = (props) => {
     pollOptions: [],
   });
   const [pollOptionInput, setPollOptionInput] = useState("");
+  const [editPollOptionIndex, setEditPollOptionIndex] = useState(-1);
   const [formErrors, setFormErrors] = useState({
     titleError: "",
     optionError: "",
@@ -39,9 +41,21 @@ const AddPoll = (props) => {
       formValues,
       setFormErrors,
       setFormValues,
-      setPollOptionInput
-    );
+      setPollOptionInput,
+      editPollOptionIndex,
+      setEditPollOptionIndex
+    )
   };
+
+  const editPollOption=(index)=>{
+    setPollOptionInput(formValues.pollOptions[index].optionTitle);
+    setEditPollOptionIndex(index);
+  }
+
+  const deletePollOption=(index)=>{
+    const updatedPollOptions = formValues.pollOptions.filter((_, optionIndex) => optionIndex !== index);
+    setFormValues((prevValues) => ({ ...prevValues, pollOptions: updatedPollOptions }));
+  }
 
   const handleAddPoll = () => {
     addNewPoll(
@@ -52,8 +66,7 @@ const AddPoll = (props) => {
       setPollOptionInput,
       setShow,
       pollOptionInput,
-      dispatch
-    );
+      dispatch)
   };
 
   const closeButton = () => {
@@ -99,7 +112,15 @@ const AddPoll = (props) => {
           <div className="error-message mb-2">{formErrors.optionError}</div>
           {formValues.pollOptions.map((option, index) => (
             <div key={index} className="input-list bg-secondary">
-              {option.optionTitle}
+              <div className="input-list-container">
+                <div className="option-title">{option.optionTitle}</div>
+                <div className="edit-button" onClick={()=>editPollOption(index)}>
+                  <PencilSquare />
+                </div>
+                <div className="delete-button" onClick={()=>deletePollOption(index)}>
+                  <Trash />
+                </div>
+              </div>
             </div>
           ))}
           <div className="add-poll-container">
