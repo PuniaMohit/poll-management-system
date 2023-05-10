@@ -2,6 +2,7 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  REMOVE_USER_DATA
 } from "../../constants";
 
 import api from "../../api"
@@ -24,3 +25,7 @@ export const login = (userData) => async (dispatch) => {
     });
   }
 };
+
+export const removeUserData =()=>(dispatch)=>{
+  dispatch({type:REMOVE_USER_DATA})
+}

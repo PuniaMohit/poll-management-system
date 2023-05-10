@@ -36,9 +36,17 @@ margin-right: 2%;
     align-items: center;
 }
 
+.edit-buttons{
+    display: flex;
+}
+
 .edit-button-radio{
     margin-left: 1%;
     color: gray;
     cursor: pointer;
 font-size: 0.6rem;
+}
+
+.edit-button-pencil-square{
+    margin-left:10% ;
 }

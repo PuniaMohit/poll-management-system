@@ -2,7 +2,6 @@ import {
   POLL_LIST_REQUEST,
   POLL_LIST_SUCCESS,
   POLL_LIST_FAILURE,
-  STORING_ADD_POLL_IN_POLL_LIST,
 } from "../../constants";
 
 const initialState = {
@@ -13,21 +12,6 @@ const initialState = {
 
 const pollListReducer = (state = initialState, action) => {
   switch (action.type) {
-    case STORING_ADD_POLL_IN_POLL_LIST:
-      return {
-        ...state,
-        pollList: [
-          {
-            title: action.payload.title,
-            optionList: [
-              {
-                optionTitle: action.payload.options[0].optionTitle,
-                options: action.payload.options[0].options,
-              },
-            ],
-          },
-        ],
-      };
     case POLL_LIST_REQUEST:
       return {
         ...state,

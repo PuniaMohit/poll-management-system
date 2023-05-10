@@ -10,53 +10,29 @@ import pollList from "../../redux/pollList/actions/pollList";
 import voteCount from "../../redux/voteCount/actions/votecount";
 import deletePoll from "../../redux/delete/actions/delete";
 import UpdatePollTitle from "../UpdatePollTitle/updatePollTitle";
+import { removeUserData } from "../../redux/login/actions/login";
 
 const PollList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [pollIDs, setPollIDs] = useState([]);
-  const [answeredPollIDs, setAnsweredPollIDs] = useState([]);
   const pollQuestion = useSelector((state) => state.pollList.pollList);
   const pollCreated = useSelector((state) => state.addPoll.pollAdded);
   const [show, setShow] = useState(false);
   const [showUpdatePollModal, setShowUpdatePollMOdal] = useState(false);
   const userDetailsFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-  console.log(userDetailsFromLocalStorage.user.roleId === 1);
+
   useEffect(() => {
+    setPollIDs(JSON.parse(localStorage.getItem("pollIDs")) ?? []);
     dispatch(pollList());
-  }, [dispatch]);
-
-  useEffect(() => {
-    const storedAnswers = JSON.parse(localStorage.getItem("answeredPollIDs"));
-    if (storedAnswers) {
-      setAnsweredPollIDs(storedAnswers);
-    }
-  }, []);
-
-  useEffect(() => {
-    const storedPollIDs = JSON.parse(localStorage.getItem("pollIDs"));
-    if (storedPollIDs) {
-      setPollIDs(storedPollIDs);
-    }
   }, []);
 
   const handleOptionClick = (pollID) => {
-    if (!answeredPollIDs.includes(pollID)) {
-      const updatedAnsweredPollIDs = [...answeredPollIDs, pollID];
-      setAnsweredPollIDs(updatedAnsweredPollIDs);
-      localStorage.setItem(
-        "answeredPollIDs",
-        JSON.stringify(updatedAnsweredPollIDs)
-      );
-    }
-
     if (!pollIDs.includes(pollID)) {
-      const updatedPollIDs = [...pollIDs, pollID];
-      setPollIDs(updatedPollIDs);
-      localStorage.setItem("pollIDs", JSON.stringify(updatedPollIDs));
+      setPollIDs((prevPollIDs) => [...prevPollIDs, pollID]);
+      localStorage.setItem("pollIDs", JSON.stringify([...pollIDs, pollID]));
     }
   };
-
 
   return (
     <div className="container">
@@ -71,8 +47,11 @@ const PollList = () => {
           </Button>
         )}
         <Button
-          onClick={()=>{ localStorage.clear();
-            navigate("/", { replace: true })}}
+          onClick={() => {
+            localStorage.clear();
+            navigate("/", { replace: true });
+            dispatch(removeUserData());
+          }}
           variant="primary"
           className="logout-button mt-3 rounded-pill btn-lg"
         >
@@ -85,7 +64,7 @@ const PollList = () => {
           <div className="title">
             <div className="poll-title">{title}</div>
             {userDetailsFromLocalStorage.user.roleId === 1 && (
-              <div>
+              <div className="edit-buttons">
                 <Button
                   className="btn-sm btn-light"
                   onClick={() => dispatch(deletePoll(id))}
@@ -93,7 +72,7 @@ const PollList = () => {
                   <Trash />
                 </Button>
                 <Button
-                  className="btn-sm btn-light edit-button"
+                  className="btn-sm btn-light edit-button-pencil-square"
                   onClick={() => setShowUpdatePollMOdal(true)}
                 >
                   <PencilSquare />
@@ -107,7 +86,7 @@ const PollList = () => {
             id={id}
           />
           {optionList.map((element) => {
-            const isChecked = answeredPollIDs.includes(element.pollId);
+            const isChecked = pollIDs.includes(element.pollId);
             const isDisabled =
               pollIDs.includes(element.pollId) && element.pollId !== isChecked;
             return (
