@@ -1,75 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { InputGroup, FormControl, Button, Modal } from "react-bootstrap";
 import { PlusCircleFill } from "react-bootstrap-icons";
 import { addPoll } from "../../redux/addPoll/actions/addPoll";
-import pollList from "../../redux/pollList/actions/pollList";
+import "./addPoll.css";
+import { addPollOption } from "../../utils/addPollValidation";
+import { addNewPoll } from "../../utils/addPollValidation";
 
 const AddPoll = (props) => {
   const dispatch = useDispatch();
   const { show, setShow } = props;
-  const [pollTitle, setPollTitle] = useState("");
+  const [formValues, setFormValues] = useState({
+    pollTitle: "",
+    pollOptions: [],
+  });
   const [pollOptionInput, setPollOptionInput] = useState("");
-  const [pollOptions, setPollOptions] = useState([]);
-  const [titleError, setTitleError] = useState("");
-  const [optionError, setOptionError] = useState("");
+  const [formErrors, setFormErrors] = useState({
+    titleError: "",
+    optionError: "",
+  });
 
   const handlePollTitle = (event) => {
-    setPollTitle(event.target.value);
-    setTitleError("");
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      pollTitle: event.target.value,
+    }));
+    setFormErrors((prevErrors) => ({ ...prevErrors, titleError: "" }));
   };
 
   const handlePollOption = (event) => {
     setPollOptionInput(event.target.value);
-    setOptionError("");
+    setFormErrors((prevErrors) => ({ ...prevErrors, optionError: "" }));
   };
 
   const handleAddPollOption = () => {
-    if (pollOptionInput.trim() !== "") {
-      if (pollOptions.length >= 3) {
-        setOptionError("You can only enter 3 options maximum.");
-      } else {
-        setPollOptions([...pollOptions, { optionTitle: pollOptionInput }]);
-        setPollOptionInput("");
-      }
-    } else {
-      setOptionError("Enter poll option");
-    }
+    addPollOption(
+      pollOptionInput,
+      formValues,
+      setFormErrors,
+      setFormValues,
+      setPollOptionInput
+    );
   };
 
   const handleAddPoll = () => {
-    const titleRegex = /^.{8,}$/;
-    if (pollTitle.trim() === "") {
-      setTitleError("Enter poll title");
-    } else if (!titleRegex.test(pollTitle.trim())) {
-      setTitleError("Title should be of minimum 8 characters");
-    }
-    if (pollOptionInput === "") {
-      setOptionError("Enter option");
-    } else if (pollOptions.length < 3) {
-      setOptionError("Enter at least three options");
-    }
-    if (pollOptions.length === 3) {
-      const newPoll = { title: pollTitle, options: pollOptions };
-      dispatch(addPoll(newPoll));
-      setPollTitle("");
-      setPollOptions([]);
-      setTitleError("");
-      setOptionError("");
-      setPollOptionInput("");
-      setShow(false);
-    }
+    addNewPoll(
+      formValues,
+      setFormErrors,
+      setFormValues,
+      addPoll,
+      setPollOptionInput,
+      setShow,
+      pollOptionInput,
+      dispatch
+    );
   };
 
   const closeButton = () => {
-    setPollTitle("");
-    setPollOptions([]);
-    setTitleError("");
-    setOptionError("");
+    setFormValues({ pollTitle: "", pollOptions: [] });
+    setFormErrors({ titleError: "", optionError: "" });
     setPollOptionInput("");
   };
-
-  
 
   return (
     <Modal
@@ -85,27 +76,29 @@ const AddPoll = (props) => {
       </Modal.Header>
       <Modal.Body>
         <div className="container">
-          <InputGroup className="mb-3">
+          <InputGroup className="mb-2">
             <FormControl
               placeholder="Enter poll title"
-              value={pollTitle}
+              value={formValues.pollTitle}
               onChange={handlePollTitle}
+              isInvalid={formErrors.titleError}
             />
           </InputGroup>
-          <div className="error-message mb-2">{titleError}</div>
-          <InputGroup className="mb-3">
+          <div className="error-message mb-2">{formErrors.titleError}</div>
+          <InputGroup className="mb-2">
             <FormControl
               placeholder="Enter poll option"
               value={pollOptionInput}
               onChange={handlePollOption}
+              isInvalid={formErrors.optionError}
             />
             <Button variant="outline-secondary" onClick={handleAddPollOption}>
               <PlusCircleFill />
             </Button>
           </InputGroup>
-          <div className="error-message mb-2">{optionError}</div>
-          {pollOptions.map((option, index) => (
-            <div key={index} className="input-list">
+          <div className="error-message mb-2">{formErrors.optionError}</div>
+          {formValues.pollOptions.map((option, index) => (
+            <div key={index} className="input-list bg-secondary">
               {option.optionTitle}
             </div>
           ))}
