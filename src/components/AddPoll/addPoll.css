@@ -1,0 +1,23 @@
+.input-list {
+    display: inline-block;
+    padding: 2%;
+    margin-bottom: 3%;
+    color: white;
+    border-radius: 5px;
+    margin-left: 1%;
+}
+
+.option-title{
+    display: inline-block;
+}
+.input-list-container{
+    display: flex;
+}
+.edit-button{
+    cursor: pointer;
+    margin-left: 5%;
+}
+.delete-button{
+    margin-left: 5%;
+    cursor: pointer;
+}
